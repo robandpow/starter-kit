@@ -1,71 +1,40 @@
 # Windows Quick Setup
 
-## Open PowerShell
-Press `Win`, type `powershell`, and hit `Enter`.
+Open PowerShell: press `Win`, type `powershell`, hit `Enter`. Then paste each block top-to-bottom.
 
-## Allow npm scripts to run (one-time)
+## Allow npm scripts
 ```powershell
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force
 ```
 
-## Discord
+## Discord / Slack / GitHub CLI / VS Code
 ```powershell
 winget install -e --id Discord.Discord
-```
-
-## Slack
-```powershell
 winget install -e --id SlackTechnologies.Slack
-```
-
-## Git (portable, into your user folder)
-No admin needed. Extracts PortableGit to `%USERPROFILE%\Git` and adds it to PATH.
-```powershell
-$u=(iwr "https://api.github.com/repos/git-for-windows/git/releases/latest" -UseBasicParsing | ConvertFrom-Json).assets | ?{ $_.name -like "PortableGit-*-64-bit.7z.exe" } | select -First 1 -Expand browser_download_url; iwr $u -OutFile "$env:TEMP\pg.exe"; & "$env:TEMP\pg.exe" -o"$env:USERPROFILE\Git" -y | Out-Null; $gb="$env:USERPROFILE\Git\cmd"; [Environment]::SetEnvironmentVariable("Path","$gb;"+[Environment]::GetEnvironmentVariable("Path","User"),"User"); $env:Path="$gb;$env:Path"; git --version
-```
-
-## GitHub CLI
-```powershell
 winget install -e --id GitHub.cli
+winget install -e --id Microsoft.VisualStudioCode
 gh auth login
 ```
 
-## Visual Studio Code
+## Git (portable, no admin)
+Installs to `C:\Users\Public\Git` — outside your home folder so Claude Code works later.
 ```powershell
-winget install -e --id Microsoft.VisualStudioCode
+$u=(iwr "https://api.github.com/repos/git-for-windows/git/releases/latest" -UseBasicParsing | ConvertFrom-Json).assets | ?{ $_.name -like "PortableGit-*-64-bit.7z.exe" } | select -First 1 -Expand browser_download_url; iwr $u -OutFile "$env:TEMP\pg.exe"; & "$env:TEMP\pg.exe" -o"C:\Users\Public\Git" -y | Out-Null; $gb="C:\Users\Public\Git\cmd"; [Environment]::SetEnvironmentVariable("Path","$gb;"+[Environment]::GetEnvironmentVariable("Path","User"),"User"); $env:Path="$gb;$env:Path"; git --version
 ```
 
-## Node (portable, into your user folder)
-Works in the current window — no reopen needed.
+## Node (portable, no admin)
 ```powershell
 $v="v22.11.0"; iwr "https://nodejs.org/dist/$v/node-$v-win-x64.zip" -OutFile "$env:TEMP\node.zip"; Expand-Archive "$env:TEMP\node.zip" "$env:USERPROFILE" -Force; $nd="$env:USERPROFILE\node-$v-win-x64"; [Environment]::SetEnvironmentVariable("Path","$nd;"+[Environment]::GetEnvironmentVariable("Path","User"),"User"); $env:Path="$nd;$env:Path"; node -v
 ```
 
-## Verify (open a new PowerShell)
+## Claude Code + Codex
 ```powershell
-git --version
-gh --version
-node --version
-npm --version
+npm install -g @anthropic-ai/claude-code @openai/codex
+[Environment]::SetEnvironmentVariable("CLAUDE_CODE_GIT_BASH_PATH","C:\Users\Public\Git\bin\bash.exe","User")
+$env:CLAUDE_CODE_GIT_BASH_PATH="C:\Users\Public\Git\bin\bash.exe"
 ```
 
-## Claude Code
-Points Claude Code at the PortableGit `bash.exe` from the step above.
-```powershell
-npm install -g @anthropic-ai/claude-code
-[Environment]::SetEnvironmentVariable("CLAUDE_CODE_GIT_BASH_PATH","$env:USERPROFILE\Git\bin\bash.exe","User")
-$env:CLAUDE_CODE_GIT_BASH_PATH="$env:USERPROFILE\Git\bin\bash.exe"
-claude
-```
-
-## Codex
-```powershell
-npm install -g @openai/codex
-codex
-```
-
-## oh-my-claudecode (Claude Code plugin)
-Run these inside Claude Code:
+## oh-my-claudecode (inside `claude`)
 ```text
 /plugin marketplace add Yeachan-Heo/oh-my-claudecode
 /plugin install oh-my-claudecode@omc
@@ -74,5 +43,4 @@ Run these inside Claude Code:
 ## oh-my-codex
 ```powershell
 npm install -g oh-my-codex
-omcx
 ```
