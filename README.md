@@ -29,5 +29,5 @@ claude
 Once Claude is running, paste this single prompt and walk away:
 
 ```
-Complete my Windows dev setup by following the instructions at https://raw.githubusercontent.com/robandpow/starter-kit/main/CLAUDE.md
+Complete my Windows dev setup by following the instructions at https://raw.githubusercontent.com/hansnegaard/starter-kit/main/CLAUDE.md
 ```
