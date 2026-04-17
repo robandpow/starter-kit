@@ -24,6 +24,11 @@ winget install -e --id GitHub.cli
 gh auth login
 ```
 
+## Visual Studio Code
+```powershell
+winget install -e --id Microsoft.VisualStudioCode
+```
+
 ## Node (portable)
 ```powershell
 $ver  = "v22.11.0"                     # set latest LTS from https://nodejs.org/dist
